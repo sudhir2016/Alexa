@@ -1,0 +1,61 @@
+'use strict';
+const Alexa = require('alexa-sdk');
+const APP_ID = undefined;
+const SKILL_NAME = 'Poem';
+const POEM_TITLE = "Stopping by Woods on a Snowy Evening.";
+const HELP_MESSAGE = 'You can ask me to read you a poem?';
+const HELP_REPROMPT = 'What can I help you with?';
+const STOP_MESSAGE = 'Goodbye!';
+const data =    ' Whose woods these are I think I know.'+
+                ' His house is in the village though.'+
+                ' He will not see me stopping here.'+
+                ' To watch his woods fill up with snow'+
+                
+                ' My little horse must think it queer.'+
+                ' To stop without a farmhouse near.'+
+                ' Between the woods and frozen lake.'+
+                ' The darkest evening of the year.'+
+                
+                ' He gives his harness bells a shake.'+
+                ' To ask if there is some mistake.'+
+                ' The only other sound’s the sweep.'+
+                ' Of easy wind and downy flake.'+
+                
+                ' The woods are lovely , dark and deep.,'+
+                ' But I have promises to keep.'+
+                ' And miles to go before I sleep.'+
+                ' And miles to go before I sleep.'
+       ;
+exports.handler = function(event, context, callback) {
+    var alexa = Alexa.handler(event, context);
+    alexa.appId = APP_ID;
+    alexa.registerHandlers(handlers);
+    alexa.execute();
+};
+
+const handlers = {
+    'LaunchRequest': function () {
+        this.emit('GetPoemIntent');
+    },
+    'GetPoemIntent': function () {
+        const speechOutput = POEM_TITLE + data;
+        this.response.cardRenderer(SKILL_NAME, data);
+        this.response.speak(speechOutput);
+        this.emit(':responseReady');
+    },
+    'AMAZON.HelpIntent': function () {
+        const speechOutput = HELP_MESSAGE;
+        const reprompt = HELP_REPROMPT;
+
+        this.response.speak(speechOutput).listen(reprompt);
+        this.emit(':responseReady');
+    },
+    'AMAZON.CancelIntent': function () {
+        this.response.speak(STOP_MESSAGE);
+        this.emit(':responseReady');
+    },
+    'AMAZON.StopIntent': function () {
+        this.response.speak(STOP_MESSAGE);
+        this.emit(':responseReady');
+    },
+};
